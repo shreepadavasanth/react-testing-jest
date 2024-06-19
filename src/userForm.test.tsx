@@ -1,8 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import user from "@testing-library/user-event";
 import UserForm from "./userForm";
+import { UserInterface } from "./userinterface";
+const callBack = jest.fn();
 
 describe("User Form Suite", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   test("it shows 2 inputs and a button", () => {
     render(<UserForm onUserAdd={() => jest.fn()} />);
     const inputs: HTMLTimeElement[] =
@@ -14,14 +19,24 @@ describe("User Form Suite", () => {
   });
 
   test("it calls onUserAdd when form is submitted", () => {
-    render(<UserForm onUserAdd={() => jest.fn()} />);
+    //Not the best implementation
+    render(<UserForm onUserAdd={callBack} />);
     const [nameInput, emailInput] =
       screen.getAllByRole<HTMLInputElement>("textbox");
 
-    const button = screen.getAllByRole<HTMLButtonElement>("button");
     user.click(nameInput);
     user.keyboard("Shree");
     user.click(emailInput);
-    user.keyboard("Shree");
+    user.keyboard("Shreepad@gmail.com");
+
+    const button: HTMLButtonElement =
+      screen.getByRole<HTMLButtonElement>("button");
+    user.click(button);
+
+    expect(callBack).toHaveBeenCalledTimes(1);
+    expect(callBack).toHaveBeenCalledWith({
+      name: "Shree",
+      email: "Shreepad@gmail.com",
+    });
   });
 });
