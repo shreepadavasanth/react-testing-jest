@@ -18,25 +18,48 @@ describe("User Form Suite", () => {
     expect(button).toBeInTheDocument();
   });
 
-  test("it calls onUserAdd when form is submitted", () => {
+  test("it calls onUserAdd when form is submitted", async () => {
     //Not the best implementation
     render(<UserForm onUserAdd={callBack} />);
-    const [nameInput, emailInput] =
-      screen.getAllByRole<HTMLInputElement>("textbox");
-
-    user.click(nameInput);
-    user.keyboard("Shree");
-    user.click(emailInput);
-    user.keyboard("Shreepad@gmail.com");
+    const nameInput: HTMLInputElement = screen.getByRole("textbox", {
+      name: /name/i,
+    });
+    const emailInput: HTMLInputElement = screen.getByRole("textbox", {
+      name: /email/i,
+    });
+    await user.click(nameInput);
+    await user.keyboard("Shree");
+    await user.click(emailInput);
+    await user.keyboard("Shreepad@gmail.com");
 
     const button: HTMLButtonElement =
       screen.getByRole<HTMLButtonElement>("button");
-    user.click(button);
+    await user.click(button);
 
     expect(callBack).toHaveBeenCalledTimes(1);
     expect(callBack).toHaveBeenCalledWith({
       name: "Shree",
       email: "Shreepad@gmail.com",
     });
+  });
+
+  test("it should empty the inputs when submitting the form", async () => {
+    render(<UserForm onUserAdd={() => {}} />);
+    const inputComponent: HTMLInputElement = screen.getByRole<HTMLInputElement>(
+      "textbox",
+      { name: /name/i }
+    );
+    const emailComponent: HTMLInputElement = screen.getByRole<HTMLInputElement>(
+      "textbox",
+      { name: /email/i }
+    );
+    await user.click(inputComponent);
+    await user.keyboard("inputComponent");
+    await user.click(emailComponent);
+    await user.keyboard("inputComponent@gmail.com");
+    const buttonComponent: HTMLButtonElement = screen.getByRole("button");
+    await user.click(buttonComponent);
+    expect(inputComponent).toHaveValue("");
+    expect(emailComponent).toHaveValue("");
   });
 });

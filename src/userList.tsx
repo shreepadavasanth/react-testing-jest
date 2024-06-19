@@ -1,7 +1,7 @@
 import React from "react";
 import { UserInterface } from "./userinterface";
 
-type userListProps = {
+export type userListProps = {
   users: UserInterface[];
 };
 
@@ -10,7 +10,7 @@ const UserList: React.FC<userListProps> = ({
 }: userListProps): React.ReactElement => {
   const renderedUsers = users.map((user: UserInterface) => {
     return (
-      <tr>
+      <tr key={user.name}>
         <td>{user.name}</td>
         <td>{user.email}</td>
       </tr>
@@ -24,7 +24,7 @@ const UserList: React.FC<userListProps> = ({
           <th>Email</th>
         </tr>
       </thead>
-      <tbody>{renderedUsers}</tbody>
+      <tbody data-testid="users">{renderedUsers}</tbody>
     </table>
   );
 };

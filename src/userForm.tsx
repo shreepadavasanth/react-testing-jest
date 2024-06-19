@@ -14,13 +14,16 @@ const UserForm: React.FC<userFormProp> = ({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onUserAdd({ name, email });
+    setEmail(() => "");
+    setName(() => "");
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <div style={{ flexDirection: "column" }}>
-        <label>name</label>
+        <label htmlFor="name">name</label>
         <input
+          id="name"
           value={name}
           onChange={(e: React.FormEvent<HTMLInputElement>) =>
             setName(e.currentTarget.value)
@@ -28,8 +31,9 @@ const UserForm: React.FC<userFormProp> = ({
         />
       </div>
       <div>
-        <label>Email</label>
+        <label htmlFor="email">Enter Email</label>
         <input
+          id="email"
           value={email}
           onChange={(e: React.FormEvent<HTMLInputElement>) =>
             setEmail(e.currentTarget.value)
